@@ -1,26 +1,17 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, jsonify
 import subprocess
-import time
-import os
 
 app = Flask(__name__)
 
 @app.route('/run-voicebot', methods=['GET'])
 def run_voicebot():
     try:
-        # Start the voice bot script and generate an MP3
-        process = subprocess.Popen(["python3", "your_voicebot_script.py"])
-        time.sleep(3)  # Give it time to generate the response.mp3
-
-        # Ensure the MP3 file exists
-        file_path = "response.mp3"
-        if os.path.exists(file_path):
-            return send_file(file_path, as_attachment=True)
-        else:
-            return {"message": "MP3 file not found", "status": "error"}
-    
+        # Run your voice bot script
+        process = subprocess.Popen(["python3", "VoiceBot2.py"])
+        return jsonify({"message": "VoiceBot activated", "status": "success"})
     except Exception as e:
-        return {"message": f"Error: {str(e)}", "status": "error"}
+        return jsonify({"message": f"Error: {str(e)}", "status": "error"})
 
+# Ensure Flask runs when Fleek starts
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    app.run(host='0.0.0.0', port=8080)
